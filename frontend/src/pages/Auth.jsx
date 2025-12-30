@@ -48,23 +48,23 @@ export default function CryptoAuthPages() {
           throw new Error('Passwords do not match');
         }
 
-        await registerUser({
-          fullName: formData.fullName,
-          email: formData.email,
-          password: formData.password
-        });
+        // await registerUser({
+        //   fullName: formData.fullName,
+        //   email: formData.email,
+        //   password: formData.password
+        // });
 
-        setIsSignUp(false);
-        setFormData({
-          email: '',
-          password: '',
-          confirmPassword: '',
-          fullName: '',
-          agreeToTerms: false
-        });
+        // setIsSignUp(false);
+        // setFormData({
+        //   email: '',
+        //   password: '',
+        //   confirmPassword: '',
+        //   fullName: '',
+        //   agreeToTerms: false
+        // });
 
-        alert('Account created. Please sign in.');
-        // navigate('/maintenace');
+        // alert('Account created. Please sign in.');
+        navigate('/maintenace');
       } else {
         const res = await loginUser({
           email: formData.email,
@@ -763,7 +763,7 @@ useEffect(() => {
                   <Check size={14} color="#FFFFFF" className="checkbox-icon" />
                 </div>
                 <label htmlFor="terms" className="checkbox-label">
-                  I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                  I agree to the <a href="/maintenace">Terms of Service</a> and <a href="/maintenace">Privacy Policy</a>
                 </label>
               </div>
             )}
