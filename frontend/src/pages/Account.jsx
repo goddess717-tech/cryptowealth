@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User, Mail, Phone, MapPin, Shield, Bell, Key, Globe, CreditCard, Download, Upload, Camera, Check, X, Edit2, Save, TrendingUp, Award, Calendar, Activity } from 'lucide-react';
+import { useUnlock } from '../UnlockContext';
 
 export default function CryptoProfilePage() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -13,20 +14,22 @@ export default function CryptoProfilePage() {
     security: true,
     newsletter: false
   });
+      const {openUnlock} = useUnlock();
+  
   
 
   const [profileData, setProfileData] = useState({
     fullName: user.fullName,
     email: user.email,
     phone: '+1 (269) 257-8015',
-    location: 'San Francisco, CA',
-    memberSince: 'January 2023',
-    accountType: 'Professional',
+    location: ' Massachusetts Boston, USA',
+    memberSince: 'January 2021',
+    accountType: 'Expert',
     totalInvested: 1847293.42,
     portfolioValue: 2156847.91,
     totalReturn: 309554.49,
-    returnPercentage: 16.76,
-    activeDays: 642,
+    returnPercentage: 116.76,
+    activeDays: 1825,
     tradesCompleted: 1847
   });
 
@@ -46,7 +49,7 @@ export default function CryptoProfilePage() {
   ];
 
   const achievements = [
-    { icon: <Award size={24} />, title: 'Early Adopter', description: 'Member since 2023', color: '#F59E0B' },
+    { icon: <Award size={24} />, title: 'Early Adopter', description: 'Member since 2021', color: '#F59E0B' },
     { icon: <TrendingUp size={24} />, title: 'Top Performer', description: '16%+ annual return', color: '#10B981' },
     { icon: <Activity size={24} />, title: 'Active Trader', description: '1800+ trades', color: '#3B82F6' },
     { icon: <Shield size={24} />, title: 'Security Pro', description: 'All protections enabled', color: '#8B5CF6' }
@@ -720,7 +723,7 @@ const initials =
             </div>
 
             {/* Navigation */}
-            <div className="nav-card">
+            {/* <div className="nav-card">
               <div 
                 className={`nav-item ${activeTab === 'profile' ? 'active' : ''}`}
                 onClick={() => setActiveTab('profile')}
@@ -756,7 +759,7 @@ const initials =
                 <Activity size={18} />
                 Activity Log
               </div>
-            </div>
+            </div> */}
 
             {/* Achievements */}
             <div className="achievements-card">
@@ -784,8 +787,8 @@ const initials =
               <div className="content-card">
                 <div className="card-header">
                   <h2 className="card-title">Personal Information</h2>
-                  <button className="edit-btn" onClick={() => setEditMode(!editMode)}>
-                    {editMode ? <><Save size={16} /> Save Changes</> : <><Edit2 size={16} /> Edit Profile</>}
+                  <button className="edit-btn" onClick={openUnlock}>
+                    Edit
                   </button>
                 </div>
                 <div className="form-grid">
@@ -1054,7 +1057,7 @@ const initials =
             )}
 
             {/* Portfolio Overview Card */}
-            <div className="content-card">
+            {/* <div className="content-card">
               <div className="card-header">
                 <h2 className="card-title">Portfolio Overview</h2>
               </div>
@@ -1096,7 +1099,7 @@ const initials =
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </main>
         </div>
       </div>
