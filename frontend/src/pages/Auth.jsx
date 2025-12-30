@@ -48,23 +48,23 @@ export default function CryptoAuthPages() {
           throw new Error('Passwords do not match');
         }
 
-        // await registerUser({
-        //   fullName: formData.fullName,
-        //   email: formData.email,
-        //   password: formData.password
-        // });
+        await registerUser({
+          fullName: formData.fullName,
+          email: formData.email,
+          password: formData.password
+        });
 
-        // setIsSignUp(false);
-        // setFormData({
-        //   email: '',
-        //   password: '',
-        //   confirmPassword: '',
-        //   fullName: '',
-        //   agreeToTerms: false
-        // });
+        setIsSignUp(false);
+        setFormData({
+          email: '',
+          password: '',
+          confirmPassword: '',
+          fullName: '',
+          agreeToTerms: false
+        });
 
-        // alert('Account created. Please sign in.');
-        navigate('/maintenace');
+        alert('Account created. Please sign in.');
+        // navigate('/maintenace');
       } else {
         const res = await loginUser({
           email: formData.email,
