@@ -3,10 +3,13 @@ import { ArrowUpRight, ArrowDownRight, ChevronLeft, ChevronRight, Bell, Settings
 
 export default function CryptoWealthDashboard() {
   const user = JSON.parse(localStorage.getItem('auth_user'));
+  const STORAGE_KEY = user ? `portfolio_${user.email}` : null;
+
   const [scrollPosition, setScrollPosition] = useState(0);
   const [txFilter, setTxFilter] = useState('All');
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   
 
   const getGreeting = () => {
@@ -21,9 +24,14 @@ export default function CryptoWealthDashboard() {
   
   
   // Core portfolio state - everything is derived from this
-  
-  const [portfolioData, setPortfolioData] = useState({
-    assets: [
+  const [portfolioData, setPortfolioData] = useState(() => {
+  if (!user) return null;
+
+  const saved = localStorage.getItem(`portfolio_${user.email}`);
+  return saved
+    ? JSON.parse(saved)
+    : {
+        assets: [
       {
         symbol: 'BTC',
         name: 'Bitcoin',
@@ -75,10 +83,18 @@ export default function CryptoWealthDashboard() {
         sparkline: [42, 45, 43, 48, 51, 49, 54, 57, 55, 60, 63, 61, 66, 69, 67, 72, 75, 73, 78, 81, 79, 84, 87, 85, 90, 93, 91, 96, 99, 97]
       }
     ]
-  });
-
+   };
+});
   // Derived calculations - all values computed from asset data
-  const calculatePortfolioMetrics = () => {
+ const calculatePortfolioMetrics = () => {
+  if (!portfolioData || !Array.isArray(portfolioData.assets)) {
+    return {
+      totalValue: 0,
+      weeklyChange: 0,
+      weeklyChangePercent: 0,
+      assets: []
+    };
+  }
     const assets = portfolioData.assets;
     
     // Current total value
@@ -127,6 +143,53 @@ export default function CryptoWealthDashboard() {
   };
 
   const metrics = calculatePortfolioMetrics();
+
+  useEffect(() => {
+  if (!user || !portfolioData) return;
+
+  localStorage.setItem(
+    `portfolio_${user.email}`,
+    JSON.stringify(portfolioData)
+  );
+}, [portfolioData, user]);
+
+useEffect(() => {
+  if (loading) return;
+
+  const priceUpdateInterval = setInterval(() => {
+    setPortfolioData(prev => {
+      if (!prev || !Array.isArray(prev.assets)) return prev;
+
+      return {
+        assets: prev.assets.map(asset => {
+          const randomWalk = (Math.random() - 0.48) * 0.6;
+          const priceChange = asset.currentPrice * (randomWalk / 100);
+          let newPrice = asset.currentPrice + priceChange;
+
+          const lowerBound = asset.purchasePrice * 0.85;
+          const upperBound = asset.purchasePrice * 1.25;
+
+          if (newPrice < lowerBound) newPrice = lowerBound;
+          if (newPrice > upperBound) newPrice = upperBound;
+
+          const lastPoint = asset.sparkline.at(-1);
+          const sparkChange = (Math.random() - 0.5) * 6;
+          const newPoint = Math.max(5, Math.min(95, lastPoint + sparkChange));
+
+          return {
+            ...asset,
+            currentPrice: newPrice,
+            sparkline: [...asset.sparkline.slice(1), newPoint]
+          };
+        })
+      };
+    });
+  }, 2000);
+
+  return () => clearInterval(priceUpdateInterval);
+}, [loading]);
+
+
 
  // Live price simulation - updates every 2 seconds with realistic market behavior
   useEffect(() => {
